@@ -1,0 +1,4 @@
+Have the following problem:
+'Pylint “unresolved import” error in visual studio code'
+
+unable to fix it, is probably due to IDE, so irrelevant for the purposes of this application
