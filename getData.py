@@ -33,5 +33,5 @@ def parseData(data,province = '',city= ''):
 
 
 
-x = getData("Canada", "confirmed", "2020-03-01T00:00:00Z", "2020-03-17T00:00:00Z")
+x = getData("Canada", "confirmed", "2020-03-01T00:00:00Z", "2020-04-24T00:00:00Z")
 parseData(x, 'Quebec')
