@@ -1,6 +1,6 @@
-import sys
-sys.path.append('C:/Users/foubroker/Desktop/FinalProject/coronavirusGrapher/backend/')
-import getData
+from backend.getData import * 
+import matplotlib.pyplot as plt
+
 
 country = input('Select a country: ')
 city = input('If applicable, select a city: ')
@@ -10,7 +10,6 @@ status = input('Enter Status (confirmed, recovered, deaths): ')
 
 data = getData.parseData(getData.getData(country,status), province, city)
 
-import matplotlib.pyplot as plt
 
 
 x = data['days']
@@ -20,4 +19,3 @@ plt.plot(x , y, 'o', color = 'black')
 plt.ylabel('cases')
 plt.xlabel('days')
 plt.show()
-#gfhgfjg
