@@ -1,5 +1,4 @@
 from datetime import datetime
-import pytz
 import requests
 import json
 
@@ -12,7 +11,7 @@ def getData(country, status = 'confirmed', fromUTC = "2020-03-01T00:00:00Z", toU
     elif status == '2':
         status = 'recovered'
     elif status == '3':
-        status = 'confirmed'
+        status = 'deaths'
     else:
         raise ValueError ('Value "'+ status + '" is invalid, please enter a number between 1 and 3')
 
