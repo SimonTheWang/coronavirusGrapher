@@ -4,17 +4,22 @@ from getData import *
 import matplotlib.pyplot as plt
 
 print('available countries are: ' + ', '.join(getCountries()) )
-country = input('Select a country: ')
+
+country = (input('Select a country: '))
 status = input('Enter Status number (1 : (confirmed) , 2 : (recovered) , 3 : (deaths): ')
-possibleProvinceCity = (searchProvinceCity(getData(country,status)))
+
+possibleProvinceCity = (searchProvinceCity(getData(country)))
 procity = (', '.join(list(possibleProvinceCity.keys())))
-print('available '+ procity + 's are ' + (', '.join(list(possibleProvinceCity[procity]))))
-provincecity = input('If applicable, select a city or province: ')
+
+if procity:
+    print('available '+ procity + 's are ' + (', '.join(list(possibleProvinceCity[procity]))))
+    provincecity = input('select a city or province: ')
+else:
+    provincecity = ''
 
 
 
 data = parseData(getData(country,status),(possibleProvinceCity),provincecity)
-print
 #sets the data
 x = data['days']
 y1 = data['totalCases']

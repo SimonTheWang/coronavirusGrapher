@@ -12,14 +12,20 @@ def getCountries():
     for country in data:
         allCountries.append(country["Country"])
     return allCountries
+def checkCountry(country):
+    for place in requests.get(URL+'countries').json():
+        for each in place.items():
+            if country.lower() == place['Country'].lower() or country.lower() == place['Slug'].lower() or country == place['ISO2'].lower():
+                return place['Slug']
+    raise ValueError ('cannot find response, your value "' + country + '" is not a valid country' + APIreference)
 
 def getData(country, status = 'confirmed'):
-    countryInput = 'country/' + country.lower();
-    if status == '1':
+    countryInput = 'country/' + checkCountry(country)
+    if status == '1' or status == 'confirmed' or status == '':
         status = 'confirmed'
-    elif status == '2':
+    elif status == '2' or status == 'recovered':
         status = 'recovered'
-    elif status == '3':
+    elif status == '3' or status == 'deaths':
         status = 'deaths'
     else:
         raise ValueError ('Value "'+ status + '" is invalid, please enter a number between 1 and 3')
@@ -32,11 +38,10 @@ def getData(country, status = 'confirmed'):
     response = requests.get(URL+'dayone'+'/'+countryInput+'/'+status+'/'+'live',parameters)
     
     data = response.json()
-    if type(data) == str:
-        raise ValueError ('cannot find response, your value "' + country + '" is not a valid country' + APIreference)
+
     return data
 def searchProvinceCity(data):
-    geoType = 'City or Province'
+    geoType = ''
     ProvinceCity = set()
     for datapoint in data:
         if datapoint['City']:
@@ -59,14 +64,20 @@ def parseData(data,geoType,provincecity = ''):
     info['country'] = data[0]['Country'].capitalize()
     info['provincecity'] = provincecity.capitalize()
     for subject in range(len(data)):
-        if provincecity.lower() in geoType['Province'] or provincecity.lower() in geoType['City']:
-            if provincecity.lower() == (data[subject])[(''.join(list(geoType.keys())))].lower():
-                totalCases.append(data[subject]['Cases'])
-                count+=1
-                days.append(count)
-                dates.append(data[subject]['Date'])
+        if ((list(geoType.keys()))[0]):
+            if provincecity.lower() in geoType['Province'] or provincecity.lower() in geoType['City']:
+                if provincecity.lower() == (data[subject])[(''.join(list(geoType.keys())))].lower():
+                    totalCases.append(data[subject]['Cases'])
+                    count+=1
+                    days.append(count)
+                    dates.append(data[subject]['Date'])
+            else:
+                raise ValueError ( 'Your input of either city or province is invalid, the database does not contain "'+ provincecity + '" for ' + info['country'] + APIreference)
         else:
-            raise ValueError ( 'Your input of either city or province is invalid, the database does not contain "'+ provincecity + '" for ' + info['country'] + APIreference)
+            totalCases.append(data[subject]['Cases'])
+            count+=1
+            days.append(count)
+            dates.append(data[subject]['Date'])
     info['totalCases'] = totalCases
     info['days'] = days
     info['dates'] = dates
