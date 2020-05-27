@@ -6,12 +6,17 @@ APIreference = ' refer to https://documenter.getpostman.com/view/10808728/SzS8rj
 URL = "https://api.covid19api.com/"
 
 def getCountries():
-    allCountries = []
     response = requests.get(URL+'countries')
     data = response.json()
+    return data
+
+def displayCountries(data):
+    allCountries = []
     for country in data:
         allCountries.append(country["Country"])
-    return allCountries
+        data = ', '.join(allCountries)
+    return data
+    
 def checkCountry(country):
     for place in requests.get(URL+'countries').json():
         for each in place.items():
@@ -38,23 +43,27 @@ def getData(country, status = 'confirmed'):
     response = requests.get(URL+'dayone'+'/'+countryInput+'/'+status+'/'+'live',parameters)
     
     data = response.json()
+    if data:
+        return data
+    else:
+        raise ValueError ('Data for ' + country +' parsed as ' + countryInput +' is not found')
 
-    return data
-def searchProvinceCity(data):
+def searchProvince(data):# dictionary with keys '' or province names
     geoType = ''
-    ProvinceCity = set()
+    place = {}
+    place[''] = set()
     for datapoint in data:
-        if datapoint['City']:
-            ProvinceCity.add(datapoint['City'].lower())
-            geoType = 'City'
-        if datapoint['Province']:
-            ProvinceCity.add(datapoint['Province'].lower())
-            geoType = 'Province'
-    data = {}
-    data[geoType] = ProvinceCity
-    return data
+        if datapoint['Province'] and datapoint['Province'] not in place.keys():
+            place[datapoint['Province']] = set()
 
-def parseData(data,geoType,provincecity = ''):
+        if datapoint['City']:
+            if place[datapoint['Province']]:
+                place[datapoint['Province']].add(datapoint['City'])
+            else:
+                place[''].add(datapoint['City'])
+    return place
+
+def parseData(data,geoType,province='', city = ''):
     days = []
     dates = []
     totalCases = []
@@ -62,26 +71,21 @@ def parseData(data,geoType,provincecity = ''):
     info = {}
     count = 0
     info['country'] = data[0]['Country'].capitalize()
-    info['provincecity'] = provincecity.capitalize()
-    for subject in range(len(data)):
-        if ((list(geoType.keys()))[0]):
-            if provincecity.lower() in geoType['Province'] or provincecity.lower() in geoType['City']:
-                if provincecity.lower() == (data[subject])[(''.join(list(geoType.keys())))].lower():
-                    totalCases.append(data[subject]['Cases'])
-                    count+=1
-                    days.append(count)
-                    dates.append(data[subject]['Date'])
-            else:
-                raise ValueError ( 'Your input of either city or province is invalid, the database does not contain "'+ provincecity + '" for ' + info['country'] + APIreference)
-        else:
-            totalCases.append(data[subject]['Cases'])
+    info['province'] = province.capitalize()
+    info['city'] = city.capitalize()
+    for subject in data:
+        if (((province and city and province.title() == subject['Province'].title() and city.title() == subject['City'].title())) or ((province and not city) and (province.title() == subject['Province'].title())) or ((not province and city and city.title() == subject['City'].title())) or (not province and not city)):
+            totalCases.append(subject['Cases'])
             count+=1
             days.append(count)
-            dates.append(data[subject]['Date'])
+            dates.append(subject['Date'])
+        
+    if count ==0:
+        raise ValueError ( 'Your input of either city or province is invalid, the database does not contain "'+ province+ city + '" for ' + info['country'] + APIreference)
     info['totalCases'] = totalCases
     info['days'] = days
     info['dates'] = dates
-    info['type'] = (data[subject])['Status']
+    info['type'] = subject['Status']
     info['day1'] = ''.join((data[0])['Date'].split())[:-10]
 
 
@@ -97,3 +101,5 @@ def parseData(data,geoType,provincecity = ''):
     info['casesPerDay'] = casesPerDay 
 
     return info
+
+
