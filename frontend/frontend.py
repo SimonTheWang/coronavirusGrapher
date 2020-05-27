@@ -1,5 +1,6 @@
 # from ..backend import getData
 from getData import *
+from scipy import stats
 
 import matplotlib.pyplot as plt
 
@@ -30,20 +31,23 @@ else:
 
 if province:
     if city:
-        print('Province: ' + provincexuadore + ' City: ' + city)
+        print('Processing input of : Country: ' +  country  + ', Province: ' + province + ', City: ' + city)
     elif not city:
-        print('Processing input of : Country: ' +  country  + 'Province: ' + province + ' City: ' + city)
+        print('Processing input of : Country: ' +  country  + ', Province: ' + province )
 else:
     print('Processing input of: ' +country)
 
 
-data = parseData(getData(country,status),(possibleProvinceCity),province, city)
 #sets the data
+a
+data = parseData(getData(country,status),(possibleProvinceCity),province, city)
+print(data)
+
 x = data['days']
 y1 = data['totalCases']
 y2 = data['casesPerDay']
-y11 = [1,2,3,4,5]
-y22 = [1,2,3,4,5]
+y11 = ['']
+y22 = ['']
 # plot the data
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
