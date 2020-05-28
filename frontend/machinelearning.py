@@ -36,21 +36,35 @@ plt.show()
 #print(y1)
 """
 
-poly_reg = PolynomialFeatures(degree = 4)
+poly_reg = PolynomialFeatures(degree = 2)
 x_poly = poly_reg.fit_transform(x_new2)
 pol_reg = LinearRegression()
 pol_reg.fit(x_poly, y2_new2)
 
-plt.scatter(x, y2, color='red')
-plt.plot(x_new2, pol_reg.predict(poly_reg.fit_transform(x_new2)), color='blue')
-plt.title('Truth or Bluff (Linear Regression)')
-plt.xlabel('Position level')
-plt.ylabel('Salary')
-plt.show()
 
-random_list = [80, 90]
-random_array = np.array(random_list)
-random_array_reshaped = random_array.reshape(-1, 1)
-#print(random_array_reshaped)
-a = pol_reg.predict(poly_reg.fit_transform(random_array_reshaped))
-print(a)
+future_x_dates = []
+predicted_y_list = []
+
+for i in range(1, 100):
+    random_list = [ x[len(x) - 1] + i ]
+    random_array = np.array(random_list)
+    random_array_reshaped = random_array.reshape(-1, 1)
+    random_predicted_y_value = pol_reg.predict(poly_reg.fit_transform(random_array_reshaped))
+    if random_predicted_y_value >= 0:
+        future_x_dates.append(x[len(x) - 1] + i)
+        predicted_y_list.append(int(random_predicted_y_value))
+    else:
+        break
+
+print(future_x_dates)
+print(predicted_y_list)
+
+
+
+plt.scatter(x, y2, color='red')
+plt.scatter(future_x_dates, predicted_y_list, color='green')
+plt.plot(x_new2, pol_reg.predict(poly_reg.fit_transform(x_new2)), color='blue')
+plt.title('Coronavirus prediction (Polynomial Regression degree 2)')
+plt.xlabel('Number of days')
+plt.ylabel('Number of new cases')
+plt.show()
