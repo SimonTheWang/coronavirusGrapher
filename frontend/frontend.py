@@ -5,14 +5,14 @@ from scipy import stats
 import matplotlib.pyplot as plt
 
 print('available countries are: ' + displayCountries(getCountries()) )
-
 country = (input('Select a country: '))
 status = input('Enter Status number (1 : (confirmed) , 2 : (recovered) , 3 : (deaths): ')
 
-possibleProvinceCity = (searchProvince(getData(country)))
- 
+possibleProvinceCity = (searchProvince(getData(country)))# searches for possible provinces and/or cities tied to the country
+
 possibleProvinces = ', '.join(list(possibleProvinceCity.keys()))
-if possibleProvinces:
+
+if possibleProvinces:# makes additional inputs for province and/or cities if needed
     print('Available provinces are: ' + possibleProvinces)
     province = (input('Enter a province: ').title())
     possibleCities = ', '.join(list(possibleProvinceCity[province]))
@@ -29,7 +29,7 @@ else:
     province = ''
     city = ''
 
-if province:
+if province:# confirms input
     if city:
         print('Processing input of : Country: ' +  country  + ', Province: ' + province + ', City: ' + city)
     elif not city:
@@ -39,7 +39,6 @@ else:
 
 
 #sets the data
-a
 data = parseData(getData(country,status),(possibleProvinceCity),province, city)
 print(data)
 
