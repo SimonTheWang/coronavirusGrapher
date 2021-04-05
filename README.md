@@ -4,5 +4,7 @@ The task of this project is to predict the end of new cases of COVID-19 mathemat
 Key-words: Polynomial regression, COVID-19, Python, Machine Learning, Graph
 
 #Example use case
-![image](https://user-images.githubusercontent.com/48161840/113587528-e919a000-95fc-11eb-9eed-7b161c501475.png)
+
+![image](https://user-images.githubusercontent.com/48161840/113587597-0189ba80-95fd-11eb-8fdf-d345a2e325a0.png)
+
 
